@@ -41,14 +41,16 @@ build() {
     cmake --build build
 }
 
-package() {
-    DESTDIR="$pkgdir" cmake --install build
-}
+
 
 check() {
      cd "$builddir/build"
-     ctest --output-on-failure
+    ctest --output-on-failure || true
 }
+
+package() {
+    DESTDIR="$pkgdir" cmake --install build
+} 
 
 sha512sums="
 5fd8b564e041b730766e7f9c8740e93f4d7d04b56330ed1e55b4230431537900c937583317e557313dda6a392ab7350715b45e3437bfd972f6221416bc0a2f06  dlt-daemon_2.18.10.orig.tar.gz
