@@ -7,19 +7,22 @@ pkgdesc="Single-file zlib replacement library"
 url="https://github.com/richgel999/miniz"
 arch="all"
 license="MIT"
+
 depends=""
 makedepends="
 cmake
 ninja
 "
+
 subpackages="
 	$pkgname-dev
 "
+
 source="
-    mujoco::git+https://github.com/rtimmaraju/mujoco.git#branch=mujoco_ver_3.10.0
+$pkgname-$pkgver.tar.gz::https://github.com/richgel999/miniz/archive/refs/tags/$pkgver.tar.gz
 "
 
-builddir="$srcdir/mujoco"
+builddir="$srcdir/miniz-$pkgver"
 
 build() {
     cmake -B build \
