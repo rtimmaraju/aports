@@ -1,0 +1,13 @@
+--- a/CMakeLists.txt	2026-08-29 18:27:15.911117002 +0530
++++ b/CMakeLists.txt	2026-08-29 18:33:05.905127683 +0530
+@@ -192,10 +192,6 @@
+     add_definitions(-DDLT_USE_IPv6)
+ endif()
+ 
+-if(WITH_DLT_QNX_SYSTEM AND NOT "${CMAKE_C_COMPILER}" MATCHES "nto-qnx|qcc|ntoaarch64-gcc|ntox86_64-gcc")
+-    message(FATAL_ERROR "Can only compile for QNX with a QNX compiler, but found '${CMAKE_C_COMPILER}'.")
+-endif()
+-
+ if(WITH_DLT_FILE_LOGGING_SYSLOG_FALLBACK)
+     add_definitions(-DWITH_DLT_FILE_LOGGING_SYSLOG_FALLBACK)
+ endif()
