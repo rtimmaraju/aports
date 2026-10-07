@@ -1,0 +1,42 @@
+# Maintainer: Ramya santoshi <rtimmaraju@qnx.com>
+pkgname=rtosbench
+pkgver=0.1
+pkgrel=0
+pkgdesc="Benchmark suite for real-time operating system services"
+url="https://github.com/gchamp20/RTOSBench"
+arch="all"
+license="MIT"
+options="!check"
+source="https://github.com/rtimmaraju/RTOSBench/archive/refs/heads/master.tar.gz"
+builddir="$srcdir/RTOSBench-master"
+
+build() {
+	make \
+		mq \
+		mq_workload \
+		mq_processing \
+		mutex \
+		mutex_pip \
+		mutex_workload \
+		mutex_processing \
+		round_robin \
+		sem \
+		sem_processing \
+		sem_prio \
+		sem_workload \
+		jitter
+		
+		echo "MAKE_EXIT=$?"
+}
+
+package() {
+install -d "$pkgdir/usr/bin/rtosbench"
+
+# Install the generated benchmark executables.
+find example/qnx -type f -perm -111 \
+	-exec install -m 755 {} "$pkgdir/usr/bin/rtosbench/" \;
+}
+
+sha512sums="
+9c2cb264b7ad58c5187b0ce178555aa5e805f51bdcc367a8bbce0b637e13ebbdde48ec55fbc262ae9c32c957a63bd2562a4646d9aedcabe7943b96c1a36725d2  master.tar.gz
+"
