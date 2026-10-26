@@ -1,6 +1,6 @@
 # Maintainer: Ramya santoshi <rtimmaraju@qnx.com>
 pkgname=fast-dds
-pkgver=2.14.4
+pkgver=3.6.2
 pkgrel=0
 pkgdesc="eProsima Fast DDS with bundled foonathan"
 url="https://github.com/eProsima/Fast-DDS"
@@ -23,27 +23,26 @@ makedepends="
     qnx-io-sock-dev
     libc++-dev
     qnx-fs-gpt-dev
+    asio-dev
 "   
 depends="libc++ fast-cdr foonathan_memory openssl foonathan_memory_vendor qnx-fs-notify  qnx-fs-gpt"
 source="
-    fast-dds-$pkgver.tar.gz::https://github.com/qnx-ports/Fast-DDS/archive/refs/heads/qnx_v2.14.4.tar.gz
-    qnx.patch
-    fast-dds-asiofix.diff
-    fast-dds-disable-shm-tests.patch
-    https://github.com/chriskohlhoff/asio/archive/asio-1-29-0.tar.gz
-    asio_fix.diff
+    fast-dds-$pkgver.tar.gz::https://github.com/eProsima/Fast-DDS/archive/refs/tags/v$pkgver.tar.gz
+    dds-types-test.tar.gz::https://github.com/eProsima/dds-types-test/archive/c245fe0fee4a0227e4b904fc7fc7248e2c03b1af.tar.gz
 "
-builddir="$srcdir/Fast-DDS-qnx_v$pkgver"
-options="!check"
+
 prepare() {
     default_prepare
-    cd "$builddir"
-    patch -p1 < "$srcdir/fast-dds-asiofix.diff"
-    cd "$srcdir/asio-asio-1-29-0"
-    patch -p1 < "$srcdir/asio_fix.diff"
-    mkdir -p "$builddir/thirdparty/asio/include"
-    cp -r asio/include/* "$builddir/thirdparty/asio/include"
+
+    mkdir -p "$builddir/thirdparty/dds-types-test"
+
+    tar -xzf "$srcdir/dds-types-test.tar.gz" \
+        --strip-components=1 \
+        -C "$builddir/thirdparty/dds-types-test"
 }
+
+builddir="$srcdir/Fast-DDS-$pkgver"
+options="!check"
 
 build() {
     cmake -B build \
@@ -58,6 +57,7 @@ build() {
         -DFASTDDS_PERSISTENCE=OFF \
         -DEPROSIMA_BUILD_TESTS=ON \
         -DSECURITY=OFF \
+        -DCMAKE_CXX_FLAGS="-DSA_RESTART=0" \
         -DCMAKE_CXX_FLAGS="-I$builddir/thirdparty/asio -I/usr/include" \
         -DCMAKE_EXE_LINKER_FLAGS="-L/usr/lib -lsocket -lfsnotify -lgtest" 
     cmake --build build
