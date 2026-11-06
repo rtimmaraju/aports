@@ -1,0 +1,37 @@
+# Maintainer: Deep Chordia <dchordia@blackberry.com>
+pkgname=fast-cdr
+pkgver=1.0.25
+pkgrel=0
+pkgdesc="eProsima FastCDR library provides two serialization mechanisms."
+url="https://github.com/eProsima/Fast-CDR"
+arch="all"
+license="Apache-2.0"
+depends_dev="libc++-dev"
+makedepends="
+    $depends_dev
+    cmake
+    ninja
+    gtest-dev
+"
+subpackages="$pkgname-dev"
+source="$pkgname-$pkgver.tar.gz::https://github.com/eProsima/Fast-CDR/archive/refs/tags/v$pkgver.tar.gz"
+options="!check"
+builddir="$srcdir/Fast-CDR-$pkgver"
+
+build() {
+  cmake -B build -G Ninja \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_INSTALL_DATADIR=/usr/lib \
+    -DBUILD_SHARED_LIBS=ON \
+    -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+  cmake --build build
+}
+
+package() {
+  DESTDIR="$pkgdir" cmake --install build
+}
+
+sha512sums="
+6a20e8ba61fb516fce35bb27f02db8fb45f287bfd49574dcb39e149e6edde0b4d0598f00399a4d0557ca1f6133d96a6701d6475cbd9039879cddb5089b0ef447  fast-cdr-1.0.25.tar.gz
+"
